@@ -1,0 +1,8 @@
+elevenlabs==0.2.26
+openai==0.28.1
+openai-whisper==20230918
+langchain==0.0.302
+faiss-gpu
+fastapi==0.104.0
+uvicorn==0.23.2
+python_multipart==0.0.6
