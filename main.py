@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import openai
 from elevenlabs import set_api_key
 from chat import Chat
+from content_recommendation import get_recommendations, FoodRecommendationResponse
 from elevent_lab_integration import run_audio_prompt, generate_json, run_text_prompt
 
 # server
@@ -77,3 +78,18 @@ async def upload_audio_file(file: UploadFile = File(...), query: str = Form(...)
         return FileResponse(zip_filename, headers={"Content-Disposition": f"attachment; filename={zip_filename}"})
     else:
         raise HTTPException(status_code=404, detail="Files not found")
+
+
+@app.post("/recommend/{food_name}")
+async def get_recommend(food_name: str | None = None):
+    if not food_name:
+        return {"message": "Please select the food item"}
+
+    try:
+        recommendations = get_recommendations(title=food_name)
+    except Exception as e:
+        return {
+            "message": f"{str(e)}"
+        }
+
+    return FoodRecommendationResponse(recommendations=recommendations.to_dict(orient='records'))
